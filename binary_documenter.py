@@ -47,9 +47,9 @@ def create_table(indexes, table, trailing_chunks):
 	
 	output = ""
 	
-	header = "  "
+	header = "   "
 	for index, width in zip(indexes, column_widths):
-		header += " " * width
+		header += " " * (width - 1)
 		header += index
 	output += header + "\n"
 	
@@ -138,7 +138,7 @@ with BytesIO(input_bytes) as stream:
 	chunks.append(stream.read())
 chunks = [x for x in chunks if x]
 
-indexes = [f"{x:02X}h" for x in input_breaks]
+indexes = [f"0x{x:02X}" for x in input_breaks]
 
 table = [
 	["Raw"], 
