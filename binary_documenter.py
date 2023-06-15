@@ -124,7 +124,7 @@ else:
 input_bytes = bytes.fromhex(swap_endianness(input_little_e))
 input_breaks = [int(x, 16) for x in input_breaks]
 
-if 0 not in input_breaks:
+if 0 not in [x % 0x20 for x in input_breaks]:
 	input_breaks.insert(0, 0)
 
 breaks = []
@@ -134,7 +134,7 @@ for offset in input_breaks:
 chunks = []
 with BytesIO(input_bytes) as stream:
 	while breaks:
-		chunks.append(stream.read(breaks.pop(0)))
+		chunks.append(stream.read(breaks.pop(0) % 0x10))
 	chunks.append(stream.read())
 chunks = [x for x in chunks if x]
 
