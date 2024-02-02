@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from io import BytesIO
 from sys import argv
 
@@ -15,7 +17,7 @@ class Box:
 	CROSS = "┼"
 	END = "╴"
 
-# dear future simon: if you ever have to come back and debug this, good luck
+# dear future alice: if you ever have to come back and debug this, good luck
 def create_table(indexes, table, trailing_chunks):
 	column_widths = []
 	for column in range(len(table[0])):
@@ -113,19 +115,16 @@ def insert_spaces(string):
 	return " ".join([string[i:i + 2] for i in range(0, len(string), 2)])
 
 if len(argv) < 3:
-	print("usage:   binary_documentor.py <little endian input> <breaks> [trailing chunks]")
-	print('example: binary_documentor.py "0052414D 0000051C"   "0 4 8"  "MCM File Lists", "MCM Files"')
+	print("usage:   ./binary_documenter.py <big endian input>     <breaks> [trailing chunks]")
+	print('example: ./binary_documenter.py "4D 41 52 00"   "0 4"  "MCM File Lists" "MCM Files"')
 	exit()
 else:
-	input_little_e = argv[1]
+	input_big_e = argv[1]
 	input_breaks = argv[2].split()
 	trailing_chunks = argv[3:]
 
-input_bytes = bytes.fromhex(swap_endianness(input_little_e))
+input_bytes = bytes.fromhex(input_big_e)
 input_breaks = [int(x, 16) for x in input_breaks]
-
-if 0 not in [x % 0x20 for x in input_breaks]:
-	input_breaks.insert(0, 0)
 
 breaks = []
 for offset in input_breaks:
@@ -141,8 +140,8 @@ chunks = [x for x in chunks if x]
 indexes = [f"0x{x:02X}" for x in input_breaks]
 
 table = [
-	["Raw"], 
-	["Little-endian"], 
+	["Raw"],
+	["Little-endian"],
 	["Formatted"],
 	["utf-8"]
 ]
